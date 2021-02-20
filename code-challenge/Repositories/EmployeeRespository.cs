@@ -29,7 +29,8 @@ namespace challenge.Repositories
 
         public Employee GetById(string id)
         {
-            return _employeeContext.Employees.SingleOrDefault(e => e.EmployeeId == id);
+            var currentEmployee = _employeeContext.Employees.Include(m => m.DirectReports).SingleOrDefault(e => e.EmployeeId == id);
+            return currentEmployee;
         }
 
         public Task SaveAsync()
