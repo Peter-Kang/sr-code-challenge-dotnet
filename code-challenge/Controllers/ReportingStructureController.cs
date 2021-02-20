@@ -37,9 +37,9 @@ namespace challenge.Controllers
         {
             IActionResult result;
             //Get the it's current employee object
-            var employee_from_db = _employeeService.GetById(id);
+            var employee_from_service = _employeeService.GetById(id);
             //Check if it exists
-            if (employee_from_db == null)
+            if (employee_from_service == null)
             {
                 return NotFound();
             }
@@ -50,7 +50,7 @@ namespace challenge.Controllers
 
             //Fill in the contents
             ReportingStructure result_report = new ReportingStructure();
-            result_report.employee = employee_from_db;
+            result_report.employee = employee_from_service;
             result_report.numberOfReports = reports_count;
 
             return Ok(result_report);
@@ -69,11 +69,14 @@ namespace challenge.Controllers
                 {//add itself to the list
                     current_list_of_reports.Add(id);
                     //recusively call other employees in a DFS manner
-                    List<Employee> current_list_of_direct_reports = current_employee.DirectReports;
-                    for ( int i =0; i< current_list_of_direct_reports.Count;i++ ) 
+                    if (current_employee.DirectReports != null) 
                     {
-                        Employee direct_report = current_list_of_direct_reports[i];
-                        current_list_of_reports = GetListOfReportsWithSelf(direct_report.EmployeeId, current_list_of_reports);
+                        List<Employee> current_list_of_direct_reports = current_employee.DirectReports;
+                        for (int i = 0; i < current_list_of_direct_reports.Count; i++)
+                        {
+                            Employee direct_report = current_list_of_direct_reports[i];
+                            current_list_of_reports = GetListOfReportsWithSelf(direct_report.EmployeeId, current_list_of_reports);
+                        }
                     }
                 }
             }
