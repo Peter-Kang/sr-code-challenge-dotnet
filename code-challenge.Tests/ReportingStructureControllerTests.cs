@@ -45,17 +45,17 @@ namespace code_challenge.Tests.Integration
         public void GetReportingStructure_Ok()
         {
             // Arrange
-            var employeeId_John = "16a596ae-edd3-4847-99fe-c4518e82c86f";
-            int directReportCount = 4;
+            var employeeIdJohn = "16a596ae-edd3-4847-99fe-c4518e82c86f";
+            int expectedDirectReportCount = 4;
             // Execute
-            var getRequestTask = _httpClient.GetAsync($"api/ReportingStructureController/{employeeId_John}");
+            var getRequestTask = _httpClient.GetAsync($"api/ReportingStructureController/{employeeIdJohn}");
             var response = getRequestTask.Result;
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var newReportingStructure = response.DeserializeContent<ReportingStructure>();
             Assert.IsNotNull(newReportingStructure.numberOfReports);
-            Assert.AreEqual(directReportCount, newReportingStructure.numberOfReports);
+            Assert.AreEqual(expectedDirectReportCount, newReportingStructure.numberOfReports);
 
         }
     }

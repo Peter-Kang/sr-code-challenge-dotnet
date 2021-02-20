@@ -35,52 +35,51 @@ namespace challenge.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(String id)
         {
-            IActionResult result;
             //Get the it's current employee object
-            var employee_from_service = _employeeService.GetById(id);
+            var employeeFromService = _employeeService.GetById(id);
             //Check if it exists
-            if (employee_from_service == null)
+            if (employeeFromService == null)
             {
                 return NotFound();
             }
 
             //Get the report structure
-            List<string> direct_report_employee_ids_and_employee_id = GetListOfReportsWithSelf(id,new List<string>());
-            int reports_count = direct_report_employee_ids_and_employee_id.Count - 1;// minus one for itself
+            List<string> directReportEmployeeIDsAndEmployeeID = GetListOfReportsWithSelf(id,new List<string>());
+            int reportsCount = directReportEmployeeIDsAndEmployeeID.Count - 1;// minus one for itself
 
             //Fill in the contents
-            ReportingStructure result_report = new ReportingStructure();
-            result_report.employee = employee_from_service;
-            result_report.numberOfReports = reports_count;
+            ReportingStructure resultReport = new ReportingStructure();
+            resultReport.employee = employeeFromService;
+            resultReport.numberOfReports = reportsCount;
 
-            return Ok(result_report);
+            return Ok(resultReport);
         }
 
         private List<string> GetListOfReportsWithSelf(string id, List<string> vistedIDs) 
         {
-            var current_employee = _employeeService.GetById(id);
-            List<string> current_list_of_reports = vistedIDs;
-            if ( current_employee != null  )
+            var currentEmployee = _employeeService.GetById(id);
+            List<string> currentListOfReports = vistedIDs;
+            if (currentEmployee != null  )
             {// employee exists
              //Check if we already have the employee in the list
-                bool already_in_list = current_list_of_reports.Contains(id);
+                bool alreadyInList = currentListOfReports.Contains(id);
                 //prevent cycling
-                if (!already_in_list) 
+                if (!alreadyInList) 
                 {//add itself to the list
-                    current_list_of_reports.Add(id);
+                    currentListOfReports.Add(id);
                     //recusively call other employees in a DFS manner
-                    if (current_employee.DirectReports != null) 
+                    if (currentEmployee.DirectReports != null) 
                     {
-                        List<Employee> current_list_of_direct_reports = current_employee.DirectReports;
+                        List<Employee> current_list_of_direct_reports = currentEmployee.DirectReports;
                         for (int i = 0; i < current_list_of_direct_reports.Count; i++)
                         {
                             Employee direct_report = current_list_of_direct_reports[i];
-                            current_list_of_reports = GetListOfReportsWithSelf(direct_report.EmployeeId, current_list_of_reports);
+                            currentListOfReports = GetListOfReportsWithSelf(direct_report.EmployeeId, currentListOfReports);
                         }
                     }
                 }
             }
-            return current_list_of_reports;
+            return currentListOfReports;
         }
 
     }
