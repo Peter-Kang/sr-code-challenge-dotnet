@@ -18,6 +18,7 @@ using System.Text;
 
 namespace code_challenge.Tests.Integration
 {
+    [TestClass]
     public class ReportingStructureControllerTests
     {
         private static HttpClient _httpClient;
@@ -40,7 +41,22 @@ namespace code_challenge.Tests.Integration
             _testServer.Dispose();
         }
 
+        [TestMethod]
+        public void GetReportingStructure_Ok()
+        {
+            // Arrange
+            var employeeId_John = "16a596ae-edd3-4847-99fe-c4518e82c86f";
+            int directReportCount = 4;
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/ReportingStructureController/{employeeId_John}");
+            var response = getRequestTask.Result;
 
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var newReportingStructure = response.DeserializeContent<ReportingStructure>();
+            Assert.IsNotNull(newReportingStructure.numberOfReports);
+            Assert.AreEqual(directReportCount, newReportingStructure.numberOfReports);
 
+        }
     }
 }
