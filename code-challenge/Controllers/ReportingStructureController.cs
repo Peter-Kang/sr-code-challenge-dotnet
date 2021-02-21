@@ -11,8 +11,8 @@ using challenge.Models;
 
 namespace challenge.Controllers
 {
-    [Route("api/ReportingStructureController")]
-    public class ReportingStructureController : ControllerBase
+    [Route("api/ReportingStructure")]
+    public class ReportingStructureController : Controller
     {
 
         private readonly ILogger _logger;
@@ -22,13 +22,6 @@ namespace challenge.Controllers
         {
             _logger = logger;
             _employeeService = employeeService;
-        }
-
-        // GET: api/<ReportingStructureController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
         }
 
         // GET api/<ReportingStructureController>/5
@@ -46,7 +39,10 @@ namespace challenge.Controllers
             //Get the report structure
             List<string> directReportEmployeeIDsAndEmployeeID = GetListOfReportsWithSelf(id,new List<string>());
             int reportsCount = directReportEmployeeIDsAndEmployeeID.Count - 1;// minus one for itself
-
+            if (reportsCount < 0 ) 
+            {// if it doesn't exist it will return a empty list
+                reportsCount = 0;
+            }
             //Fill in the contents
             ReportingStructure resultReport = new ReportingStructure();
             resultReport.employee = employeeFromService;
