@@ -29,7 +29,7 @@ namespace challenge.Repositories
 
         public Compensation GetById(string id) 
         {
-            return _compensationContext.Compensations.Include(m => m.employee).SingleOrDefault(e => e.employee.EmployeeId == id);
+            return _compensationContext.Compensations.Include(m => m.employee).SingleOrDefault(e => e.employeeID == id);
         }
 
         public Task SaveAsync() 
