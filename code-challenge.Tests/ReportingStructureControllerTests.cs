@@ -48,7 +48,7 @@ namespace code_challenge.Tests.Integration
             var employeeIdJohn = "16a596ae-edd3-4847-99fe-c4518e82c86f";
             int expectedDirectReportCount = 4;
             // Execute
-            var getRequestTask = _httpClient.GetAsync($"api/ReportingStructureController/{employeeIdJohn}");
+            var getRequestTask = _httpClient.GetAsync($"api/ReportingStructure/{employeeIdJohn}");
             var response = getRequestTask.Result;
 
             // Assert
