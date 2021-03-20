@@ -37,7 +37,7 @@ namespace challenge.Controllers
             }
 
             //Get the report structure
-            List<string> directReportEmployeeIDsAndEmployeeID = GetListOfReportsWithSelf(id,new List<string>());
+            HashSet<string> directReportEmployeeIDsAndEmployeeID = GetListOfReportsWithSelf(id,new HashSet<string>());
             int reportsCount = directReportEmployeeIDsAndEmployeeID.Count - 1;// minus one for itself
             if (reportsCount < 0 ) 
             {// if it doesn't exist it will return a empty list
@@ -51,10 +51,10 @@ namespace challenge.Controllers
             return Ok(resultReport);
         }
 
-        private List<string> GetListOfReportsWithSelf(string id, List<string> vistedIDs) 
+        private HashSet<string> GetListOfReportsWithSelf(string id, HashSet<string> vistedIDs) 
         {
             var currentEmployee = _employeeService.GetById(id);
-            List<string> currentListOfReports = vistedIDs;
+            HashSet<string> currentListOfReports = vistedIDs;
             if (currentEmployee != null  )
             {// employee exists
              //Check if we already have the employee in the list
