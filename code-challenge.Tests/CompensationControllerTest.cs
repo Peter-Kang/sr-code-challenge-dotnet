@@ -36,55 +36,93 @@ namespace code_challenge.Tests.Integration
             _testServer.Dispose();
         }
 
+        //Helper functions
+        private bool SameContents(Compensation first, Compensation second, bool checkCompensationID = true)
+        {
+            bool result = false;
+            if (checkCompensationID)
+            {
+                result = (first == second);
+            }
+            else 
+            {
+                result = (first.employeeID == second.employeeID);
+                result &= (first.effectiveDate == second.effectiveDate);
+                result &= (first.salary == second.salary);
+            }
+            return result;
+        }
+        private HttpResponseMessage GetCompensationResult(string id)
+        {
+            var getRequestTask = _httpClient.GetAsync($"api/compensation/{id}");
+            return getRequestTask.Result;
+        }
+
+        private HttpResponseMessage CreatCompensationResult(Compensation objectToCreate) 
+        {
+            var requestContent = new JsonSerialization().ToJson(objectToCreate);
+            var postRequestTask = _httpClient.PostAsync("api/compensation", new StringContent(requestContent, Encoding.UTF8, "application/json"));
+            return postRequestTask.Result;
+        }
+
+        //Tests
         [TestMethod]
         public void CreateCompensation_Returns_Created_and_Get() 
         {
             // Arrange
-            var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f";
-            var expectedFirstName = "John";
-            var expectedLastName = "Lennon";
-            var expectedSalary = 101010.1;
-            var expectedStartDate = new DateTime(2021, 3, 10);
-
-            var getEmployeeRequestTask = _httpClient.GetAsync($"api/employee/{employeeId}");
-            var response = getEmployeeRequestTask.Result;
-            var employeeFromCall = response.DeserializeContent<Employee>();
-
-            var compensation = new Compensation()
+            var compensationOriginalNoCompensationID = new Compensation()
             {
-                employeeID = employeeId,
-                employee = employeeFromCall,
-                effectiveDate = expectedStartDate,
-                salary = expectedSalary
+                employeeID = "16a596ae-edd3-4847-99fe-c4518e82c86f",
+                effectiveDate = new DateTime(2021, 3, 10),
+                salary = 101010.1
             };
-            var requestContent = new JsonSerialization().ToJson(compensation);
 
             // Execute
-            var postRequestTask = _httpClient.PostAsync("api/compensation", new StringContent(requestContent, Encoding.UTF8, "application/json"));
-            var compensationResponse = postRequestTask.Result;
+            var compensationResponse = CreatCompensationResult(compensationOriginalNoCompensationID);
 
             //Assert
             Assert.AreEqual(HttpStatusCode.Created, compensationResponse.StatusCode);
             var compensationResponseStructure = compensationResponse.DeserializeContent<Compensation>();
 
-            Assert.AreEqual( employeeId, compensationResponseStructure.employeeID);
-            Assert.AreEqual( expectedStartDate, compensationResponseStructure.effectiveDate);
-            Assert.AreEqual( expectedSalary, compensationResponseStructure.salary );
-            Assert.AreEqual( expectedFirstName, compensationResponseStructure.employee.FirstName);
-            Assert.AreEqual( expectedLastName, compensationResponseStructure.employee.LastName);
+            Assert.AreNotEqual(null, compensationResponseStructure.compensationID);
+            Assert.IsTrue(SameContents(compensationOriginalNoCompensationID, compensationResponseStructure, false));
 
-           // Testing the get
-            var getRequestTask = _httpClient.GetAsync($"api/compensation/{employeeId}");
-            var getResults = getRequestTask.Result;
+            // Testing the get
+            var getResults = GetCompensationResult(compensationResponseStructure.compensationID);
             var getCompensationResponseStructure = getResults.DeserializeContent<Compensation>();
 
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, getResults.StatusCode);
-            Assert.AreEqual(employeeId, getCompensationResponseStructure.employeeID);
-            Assert.AreEqual(expectedStartDate, getCompensationResponseStructure.effectiveDate);
-            Assert.AreEqual(expectedSalary, getCompensationResponseStructure.salary);
-            Assert.AreEqual(expectedFirstName, getCompensationResponseStructure.employee.FirstName);
-            Assert.AreEqual(expectedLastName, getCompensationResponseStructure.employee.LastName);
+            Assert.IsTrue(SameContents(compensationResponseStructure, getCompensationResponseStructure));
         }
+        [TestMethod]
+        public void CreateCompensation_Bad_Employee_ID() 
+        {
+            // Arrange
+            var compensationOriginalNoCompensationIDNoEmployeeID = new Compensation()
+            {
+                employeeID = null,
+                effectiveDate = new DateTime(2021, 3, 10),
+                salary = 101010.1
+            };
+
+            // Execute
+            var compensationResponse = CreatCompensationResult(compensationOriginalNoCompensationIDNoEmployeeID);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, compensationResponse.StatusCode);
+        }
+        [TestMethod]
+        public void GetCompensation_Bad_Compenstion_ID() 
+        {
+            String badCompensationID = "BadID";
+
+            // Testing the get
+            var getResults = GetCompensationResult(badCompensationID);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, getResults.StatusCode);
+        }
+
     }
 }
