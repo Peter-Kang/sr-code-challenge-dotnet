@@ -57,7 +57,6 @@ namespace code_challenge.Tests.Integration
             var getRequestTask = _httpClient.GetAsync($"api/compensation/{id}");
             return getRequestTask.Result;
         }
-
         private HttpResponseMessage CreatCompensationResult(Compensation objectToCreate) 
         {
             var requestContent = new JsonSerialization().ToJson(objectToCreate);
