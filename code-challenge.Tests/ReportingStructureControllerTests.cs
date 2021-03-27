@@ -58,5 +58,28 @@ namespace code_challenge.Tests.Integration
             Assert.AreEqual(expectedDirectReportCount, newReportingStructure.numberOfReports);
 
         }
+
+        [TestMethod]
+        public void GetReportingStructure_NotFound()
+        {
+            // Arrange
+            var employeeIdMissing = "";
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/Reports/{employeeIdMissing}");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+
+            // Arrange
+            var employeeIdBad = "notValidID";
+            // Execute
+            var getRequestTaskNotValid = _httpClient.GetAsync($"api/Reports/{employeeIdBad}");
+            var responseNotValid = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, responseNotValid.StatusCode);
+        }
+
     }
 }
