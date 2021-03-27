@@ -36,10 +36,11 @@ namespace challenge.Controllers
                 return NotFound();
             }
             //Fill in the contents
-            ReportingStructure resultReport = new ReportingStructure();
-            resultReport.employee = employeeFromService;
-            resultReport.numberOfReports = _employeeService.GetCountOfReports(id);
-
+            ReportingStructure resultReport = new ReportingStructure()
+            {
+                employee = employeeFromService,
+                numberOfReports = _employeeService.GetCountOfReports(id)
+            };
             return Ok(resultReport);
         }
 
