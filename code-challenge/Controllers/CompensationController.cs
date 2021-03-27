@@ -26,6 +26,7 @@ namespace challenge.Controllers
         [HttpPost]
         public IActionResult CreateCompensation([FromBody] Compensation compensation)
         {
+            _logger.LogDebug($"Received compensation create request for compensation ID: '{compensation.CompensationID}'");
             ActionResult result;
             if (compensation.EmployeeID != null)
             {
@@ -39,9 +40,10 @@ namespace challenge.Controllers
             return result;
         }
 
-        [HttpGet("{id}", Name = "getCompensationById")]
+        [HttpGet("getCompensationById/{id}", Name = "getCompensationById")]
         public IActionResult GetCompensationById(String id)
         {
+            _logger.LogDebug($"Received compensation get request for ID: '{id}'");
             var compensation = _compensationService.GetById(id);
             if (compensation == null)
             {
@@ -50,6 +52,16 @@ namespace challenge.Controllers
             return Ok(compensation);
         }
 
-
+        [HttpGet("getCompensationByEmployeeID/{id}", Name = "getCompensationByEmployeeID")]
+        public IActionResult GetCompensationByEmployeeId(String id)
+        {
+            _logger.LogDebug($"Received compensation get request for Employee ID: '{id}'");
+            var compensation = _compensationService.GetByEmployeeID(id);
+            if (compensation == null)
+            {
+                return NotFound();
+            }
+            return Ok(compensation);
+        }
     }
 }

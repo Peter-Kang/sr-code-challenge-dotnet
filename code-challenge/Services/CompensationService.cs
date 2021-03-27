@@ -40,5 +40,14 @@ namespace challenge.Services
             return null;
         }
 
+        public List<Compensation> GetByEmployeeID(string employeeID) 
+        {
+            if (!String.IsNullOrEmpty(employeeID))
+            {
+                return _compensationRepository.GetByEmployeeID(employeeID);
+            }
+            return null;
+        }
+
     }
 }

@@ -34,6 +34,12 @@ namespace challenge.Repositories
             return compensation_result;
         }
 
+        public List<Compensation> GetByEmployeeID(string employeeID) 
+        {
+            List<Compensation> compensation_result = _compensationContext.Compensations.Where( e=>e.EmployeeID == employeeID ).ToList();
+            return compensation_result;
+        }
+
         public Task SaveAsync() 
         {
             return _compensationContext.SaveChangesAsync();
