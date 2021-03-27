@@ -99,7 +99,7 @@ namespace code_challenge.Tests.Integration
             Assert.IsTrue(SameContents(compensationResponseStructure, getCompensationResponseStructure));
 
             //Test Get by Employee
-            var getResultsByEmployeeID = _httpClient.GetAsync($"api/compensation/getCompensationByEmployeeID/{compensationOriginalNoCompensationID.EmployeeID}");
+            var getResultsByEmployeeID = _httpClient.GetAsync($"api/compensation/employee/{compensationOriginalNoCompensationID.EmployeeID}");
             var resultsOfGetByEmployeeID = getResultsByEmployeeID.Result;
             List<Compensation> getCompensationResponseStructureByEmployeeID = resultsOfGetByEmployeeID.DeserializeContent<List<Compensation>>();
 

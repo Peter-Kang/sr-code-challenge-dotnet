@@ -52,7 +52,7 @@ namespace challenge.Controllers
             return Ok(compensation);
         }
 
-        [HttpGet("getCompensationByEmployeeID/{id}", Name = "getCompensationByEmployeeID")]
+        [HttpGet("employee/{id}", Name = "getCompensationByEmployeeID")]
         public IActionResult GetCompensationByEmployeeId(String id)
         {
             _logger.LogDebug($"Received compensation get request for Employee ID: '{id}'");
