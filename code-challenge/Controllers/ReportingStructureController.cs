@@ -11,7 +11,7 @@ using challenge.Models;
 
 namespace challenge.Controllers
 {
-    [Route("api/ReportingStructure")]
+    [Route("api/Reports")]
     public class ReportingStructureController : Controller
     {
 
@@ -24,7 +24,7 @@ namespace challenge.Controllers
             _employeeService = employeeService;
         }
 
-        // GET api/<ReportingStructureController>/5
+        // GET api/<Reports>/5
         [HttpGet("{id}")]
         public IActionResult Get(String id)
         {
