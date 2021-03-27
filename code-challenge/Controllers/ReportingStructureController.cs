@@ -28,6 +28,7 @@ namespace challenge.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(String id)
         {
+            _logger.LogDebug($"Received Reporting get request for '{id}'");
             //Get the it's current employee object
             var employeeFromService = _employeeService.GetById(id);
             //Check if it exists

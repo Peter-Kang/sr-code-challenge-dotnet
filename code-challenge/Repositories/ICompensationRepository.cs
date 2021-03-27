@@ -13,6 +13,8 @@ namespace challenge.Repositories
 
         Compensation GetById(string id);
 
+        List<Compensation> GetByEmployeeID(string id);
+
         Task SaveAsync();
     }
 }

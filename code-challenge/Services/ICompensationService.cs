@@ -12,5 +12,7 @@ namespace challenge.Services
         Compensation Create(Compensation compensation);
 
         Compensation GetById(string id);
+
+        List<Compensation> GetByEmployeeID(string id);
     }
 }

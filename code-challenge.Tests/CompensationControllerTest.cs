@@ -54,7 +54,7 @@ namespace code_challenge.Tests.Integration
         }
         private HttpResponseMessage GetCompensationResult(string id)
         {
-            var getRequestTask = _httpClient.GetAsync($"api/compensation/{id}");
+            var getRequestTask = _httpClient.GetAsync($"api/compensation/getCompensationById/{id}");
             return getRequestTask.Result;
         }
         private HttpResponseMessage CreatCompensationResult(Compensation objectToCreate) 
@@ -64,9 +64,18 @@ namespace code_challenge.Tests.Integration
             return postRequestTask.Result;
         }
 
+        private Compensation CreateCompensationStructure(Compensation compensationToAdd) 
+        {
+            // Execute
+            var compensationResponse = CreatCompensationResult(compensationToAdd);
+            //Assert
+            Assert.AreEqual(HttpStatusCode.Created, compensationResponse.StatusCode);
+            return compensationResponse.DeserializeContent<Compensation>();
+        }
+
         //Tests
         [TestMethod]
-        public void CreateCompensation_Returns_Created_and_Get() 
+        public void CreateCompensation_Returns_Created_and_Get_And_Test_Get_By_Employee() 
         {
             // Arrange
             var compensationOriginalNoCompensationID = new Compensation()
@@ -76,12 +85,7 @@ namespace code_challenge.Tests.Integration
                 Salary = 101010.1
             };
 
-            // Execute
-            var compensationResponse = CreatCompensationResult(compensationOriginalNoCompensationID);
-
-            //Assert
-            Assert.AreEqual(HttpStatusCode.Created, compensationResponse.StatusCode);
-            var compensationResponseStructure = compensationResponse.DeserializeContent<Compensation>();
+            var compensationResponseStructure = CreateCompensationStructure(compensationOriginalNoCompensationID);
 
             Assert.AreNotEqual(null, compensationResponseStructure.CompensationID);
             Assert.IsTrue(SameContents(compensationOriginalNoCompensationID, compensationResponseStructure, false));
@@ -93,7 +97,18 @@ namespace code_challenge.Tests.Integration
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, getResults.StatusCode);
             Assert.IsTrue(SameContents(compensationResponseStructure, getCompensationResponseStructure));
+
+            //Test Get by Employee
+            var getResultsByEmployeeID = _httpClient.GetAsync($"api/compensation/getCompensationByEmployeeID/{compensationOriginalNoCompensationID.EmployeeID}");
+            var resultsOfGetByEmployeeID = getResultsByEmployeeID.Result;
+            List<Compensation> getCompensationResponseStructureByEmployeeID = resultsOfGetByEmployeeID.DeserializeContent<List<Compensation>>();
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, resultsOfGetByEmployeeID.StatusCode);
+            Assert.IsTrue(getCompensationResponseStructureByEmployeeID.Count == 1);
+            Assert.IsTrue(SameContents(compensationResponseStructure, getCompensationResponseStructureByEmployeeID[0]));
         }
+
         [TestMethod]
         public void CreateCompensation_Bad_Employee_ID() 
         {
@@ -122,6 +137,8 @@ namespace code_challenge.Tests.Integration
             //Assert
             Assert.AreEqual(HttpStatusCode.NotFound, getResults.StatusCode);
         }
+
+
 
     }
 }
