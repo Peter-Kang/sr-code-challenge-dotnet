@@ -27,10 +27,10 @@ namespace challenge.Controllers
         public IActionResult CreateCompensation([FromBody] Compensation compensation)
         {
             ActionResult result;
-            if (compensation.employeeID != null)
+            if (compensation.EmployeeID != null)
             {
                 _compensationService.Create(compensation);
-                result = CreatedAtRoute("getCompensationById", new { id = compensation.employeeID }, compensation);
+                result = CreatedAtRoute("getCompensationById", new { id = compensation.EmployeeID }, compensation);
             }
             else 
             {

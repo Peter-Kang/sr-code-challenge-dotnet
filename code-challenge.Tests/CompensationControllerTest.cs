@@ -46,9 +46,9 @@ namespace code_challenge.Tests.Integration
             }
             else 
             {
-                result = (first.employeeID == second.employeeID);
-                result &= (first.effectiveDate == second.effectiveDate);
-                result &= (first.salary == second.salary);
+                result = (first.EmployeeID == second.EmployeeID);
+                result &= (first.EffectiveDate == second.EffectiveDate);
+                result &= (first.Salary == second.Salary);
             }
             return result;
         }
@@ -71,9 +71,9 @@ namespace code_challenge.Tests.Integration
             // Arrange
             var compensationOriginalNoCompensationID = new Compensation()
             {
-                employeeID = "16a596ae-edd3-4847-99fe-c4518e82c86f",
-                effectiveDate = new DateTime(2021, 3, 10),
-                salary = 101010.1
+                EmployeeID = "16a596ae-edd3-4847-99fe-c4518e82c86f",
+                EffectiveDate = new DateTime(2021, 3, 10),
+                Salary = 101010.1
             };
 
             // Execute
@@ -83,11 +83,11 @@ namespace code_challenge.Tests.Integration
             Assert.AreEqual(HttpStatusCode.Created, compensationResponse.StatusCode);
             var compensationResponseStructure = compensationResponse.DeserializeContent<Compensation>();
 
-            Assert.AreNotEqual(null, compensationResponseStructure.compensationID);
+            Assert.AreNotEqual(null, compensationResponseStructure.CompensationID);
             Assert.IsTrue(SameContents(compensationOriginalNoCompensationID, compensationResponseStructure, false));
 
             // Testing the get
-            var getResults = GetCompensationResult(compensationResponseStructure.compensationID);
+            var getResults = GetCompensationResult(compensationResponseStructure.CompensationID);
             var getCompensationResponseStructure = getResults.DeserializeContent<Compensation>();
 
             //Assert
@@ -100,9 +100,9 @@ namespace code_challenge.Tests.Integration
             // Arrange
             var compensationOriginalNoCompensationIDNoEmployeeID = new Compensation()
             {
-                employeeID = null,
-                effectiveDate = new DateTime(2021, 3, 10),
-                salary = 101010.1
+                EmployeeID = null,
+                EffectiveDate = new DateTime(2021, 3, 10),
+                Salary = 101010.1
             };
 
             // Execute

@@ -9,20 +9,20 @@ namespace challenge.Models
     public class Compensation
     {
         [Key]
-        public String compensationID { get; set; }
-        public String employeeID { get; set; }
-        public double salary { get; set; }
-        public DateTime effectiveDate { get; set; }
+        public String CompensationID { get; set; }
+        public String EmployeeID { get; set; }
+        public double Salary { get; set; }
+        public DateTime EffectiveDate { get; set; }
 
         public static bool operator == (  Compensation first,  Compensation second ) 
         {
             bool result = false;
             if (!Object.ReferenceEquals(first, null) && !Object.ReferenceEquals(second, null))
             {
-                result =    (first.compensationID == second.compensationID);
-                result &=   (first.employeeID == second.employeeID);
-                result &=   (first.salary == second.salary);
-                result &=   (first.effectiveDate == second.effectiveDate);
+                result =    (first.CompensationID == second.CompensationID);
+                result &=   (first.EmployeeID == second.EmployeeID);
+                result &=   (first.Salary == second.Salary);
+                result &=   (first.EffectiveDate == second.EffectiveDate);
             }
             else if (Object.ReferenceEquals(first, null) && Object.ReferenceEquals(second, null)) 
             {
