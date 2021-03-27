@@ -23,13 +23,15 @@ namespace challenge.Repositories
 
         public Compensation Add(Compensation compensation) 
         {
+            compensation.compensationID = Guid.NewGuid().ToString();
             _compensationContext.Compensations.Add(compensation);
             return compensation;
         }
 
         public Compensation GetById(string id) 
         {
-            return _compensationContext.Compensations.Include(m => m.employee).SingleOrDefault(e => e.employeeID == id);
+            var compensation_result = _compensationContext.Compensations.SingleOrDefault(e => e.compensationID == id);
+            return compensation_result;
         }
 
         public Task SaveAsync() 

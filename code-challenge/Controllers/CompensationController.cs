@@ -26,12 +26,17 @@ namespace challenge.Controllers
         [HttpPost]
         public IActionResult CreateCompensation([FromBody] Compensation compensation)
         {
-            if ( compensation.employeeID == null && compensation.employee.EmployeeId != null) 
+            ActionResult result;
+            if (compensation.employeeID != null)
             {
-                compensation.employeeID = compensation.employee.EmployeeId;
+                _compensationService.Create(compensation);
+                result = CreatedAtRoute("getCompensationById", new { id = compensation.employeeID }, compensation);
             }
-            _compensationService.Create(compensation);
-            return CreatedAtRoute("getCompensationById", new { id = compensation.employeeID }, compensation);
+            else 
+            {
+                result = BadRequest("Employee ID missing");
+            }
+            return result;
         }
 
         [HttpGet("{id}", Name = "getCompensationById")]

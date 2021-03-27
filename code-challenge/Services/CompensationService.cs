@@ -23,7 +23,7 @@ namespace challenge.Services
 
         public Compensation Create(Compensation compensation) 
         {
-            if (compensation != null && compensation.employee != null) 
+            if (compensation != null ) 
             {
                 _compensationRepository.Add(compensation);
                 _compensationRepository.SaveAsync().Wait();
