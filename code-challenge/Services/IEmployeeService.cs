@@ -12,7 +12,7 @@ namespace challenge.Services
         Employee Create(Employee employee);
         Employee Replace(Employee originalEmployee, Employee newEmployee);
 
-        HashSet<string> GetListOfReportsWithSelf(string id, HashSet<string> vistedIDs);
+        int GetCountOfReports(string id);
 
     }
 }

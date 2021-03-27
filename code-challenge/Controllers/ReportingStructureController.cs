@@ -35,18 +35,10 @@ namespace challenge.Controllers
             {
                 return NotFound();
             }
-
-            //Get the report structure
-            HashSet<string> directReportEmployeeIDsAndEmployeeID = _employeeService.GetListOfReportsWithSelf(id,new HashSet<string>());
-            int reportsCount = directReportEmployeeIDsAndEmployeeID.Count - 1;// minus one for itself
-            if (reportsCount < 0 ) 
-            {// if it doesn't exist it will return a empty list
-                reportsCount = 0;
-            }
             //Fill in the contents
             ReportingStructure resultReport = new ReportingStructure();
             resultReport.employee = employeeFromService;
-            resultReport.numberOfReports = reportsCount;
+            resultReport.numberOfReports = _employeeService.GetCountOfReports(id);
 
             return Ok(resultReport);
         }

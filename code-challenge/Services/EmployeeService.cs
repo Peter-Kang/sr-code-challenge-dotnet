@@ -60,18 +60,35 @@ namespace challenge.Services
             return newEmployee;
         }
 
-        public HashSet<string> GetListOfReportsWithSelf(string id, HashSet<string> vistedIDs)
-        {
+        public int GetCountOfReports(string id) 
+        {// inital step
+            int count = 0;
             var currentEmployee = GetById(id);
-            HashSet<string> currentListOfReports = vistedIDs;
+            if (currentEmployee != null) 
+            {
+                HashSet<string> listOfReports = new HashSet<string>();
+                GetListOfReportsWithSelf(id, ref listOfReports);
+                //Get the report structure
+                count = listOfReports.Count - 1;// minus one for itself
+                if (count < 0)
+                {// if it doesn't exist it will return a empty list
+                    count = 0;
+                }
+            }
+            return count;
+        }
+
+        private void GetListOfReportsWithSelf(string id, ref HashSet<string> vistedIDs)
+        {// iterative step
+            var currentEmployee = GetById(id);
             if (currentEmployee != null)
             {// employee exists
              //Check if we already have the employee in the list
-                bool alreadyInList = currentListOfReports.Contains(id);
+                bool alreadyInList = vistedIDs.Contains(id);
                 //prevent cycling
                 if (!alreadyInList)
                 {//add itself to the list
-                    currentListOfReports.Add(id);
+                    vistedIDs.Add(id);
                     //recusively call other employees in a DFS manner
                     if (currentEmployee.DirectReports != null)
                     {
@@ -79,12 +96,11 @@ namespace challenge.Services
                         for (int i = 0; i < current_list_of_direct_reports.Count; i++)
                         {
                             Employee direct_report = current_list_of_direct_reports[i];
-                            currentListOfReports = GetListOfReportsWithSelf(direct_report.EmployeeId, currentListOfReports);
+                            GetListOfReportsWithSelf(direct_report.EmployeeId, ref vistedIDs);
                         }
                     }
                 }
             }
-            return currentListOfReports;
         }
 
     }
