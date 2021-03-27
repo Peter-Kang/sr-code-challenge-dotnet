@@ -59,5 +59,33 @@ namespace challenge.Services
 
             return newEmployee;
         }
+
+        public HashSet<string> GetListOfReportsWithSelf(string id, HashSet<string> vistedIDs)
+        {
+            var currentEmployee = GetById(id);
+            HashSet<string> currentListOfReports = vistedIDs;
+            if (currentEmployee != null)
+            {// employee exists
+             //Check if we already have the employee in the list
+                bool alreadyInList = currentListOfReports.Contains(id);
+                //prevent cycling
+                if (!alreadyInList)
+                {//add itself to the list
+                    currentListOfReports.Add(id);
+                    //recusively call other employees in a DFS manner
+                    if (currentEmployee.DirectReports != null)
+                    {
+                        List<Employee> current_list_of_direct_reports = currentEmployee.DirectReports;
+                        for (int i = 0; i < current_list_of_direct_reports.Count; i++)
+                        {
+                            Employee direct_report = current_list_of_direct_reports[i];
+                            currentListOfReports = GetListOfReportsWithSelf(direct_report.EmployeeId, currentListOfReports);
+                        }
+                    }
+                }
+            }
+            return currentListOfReports;
+        }
+
     }
 }
